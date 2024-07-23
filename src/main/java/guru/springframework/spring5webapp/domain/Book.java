@@ -17,10 +17,13 @@ public class Book {
     private String title;
     private String isbn;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private PublisherV2 publisher;
 
     public Book() {
     }
@@ -54,6 +57,14 @@ public class Book {
         this.isbn = isbn;
     }
 
+    public PublisherV2 getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(PublisherV2 publisher) {
+        this.publisher = publisher;
+    }
+
     public Set<Author> getAuthors() {
         return authors;
     }
@@ -68,8 +79,24 @@ public class Book {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
-                ", authors=" + authors +
+                ", authors=" + authorsToString(authors) + '\'' +
+                ", Publisher=" + (publisher != null ? publisherSimpleToString() : "null") +
                 '}';
+    }
+
+    private String publisherSimpleToString() {
+        return "PublisherV2{id=" + publisher.getId() +
+                ", name='" + publisher.getName() + '\'' +
+                ", address='" + publisher.getAddress().toString() + "'}";
+    }
+
+    public String authorsToString(Set<Author> authors){
+        StringBuilder authorString= new StringBuilder();
+        for(var author : authors){
+            authorString.append("Author{id=").append(author.getId()).append(", firstName='").append(author.getFirstName()).append("'} ");
+        }
+
+        return authorString.toString();
     }
 
     @Override

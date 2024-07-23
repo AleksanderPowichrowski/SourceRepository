@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Spring5webappApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Spring5webappApplication.class, args);
+		SpringApplication app = new SpringApplication(Spring5webappApplication.class);
+		app.setLazyInitialization(false);
+		app.run(args);
 	}
 
 }
