@@ -40,103 +40,42 @@ public class BootStrapData implements CommandLineRunner {
 
         Author eric = new Author("Eric", "Evans");
         Book ddd = new Book("Domain Driven Design", "123123");
-
-
-        PublisherV2 pubV22 = new PublisherV2();
-        pubV22.setName("DWD");
-        pubV22.setAddress("ul. Czestochowska 40/4","Czestochowa","05-444");
-        publisherV2Repository.save(pubV22);
-
-        eric.getBooks().add(ddd);
-        ddd.getAuthors().add(eric);
-
-        ddd.setPublisher(pubV22);
-        pubV22.getReleasedBooks().add(ddd);
-
-        authorRepository.save(eric);
-        bookRepository.save(ddd);
-        publisherV2Repository.save(pubV22);
+        PublisherV2 pubV21 = new PublisherV2();
+        pubV21.setName("DWD");
+        pubV21.setAddress("ul. Czestochowska 40/4", "Czestochowa", "05-444");
 
         Author rod = new Author("Rod", "Johnson");
         Book noEJB = new Book("J2EE Development without EJB", "3939459459");
-        PublisherV2 pubV21 = new PublisherV2();
+        PublisherV2 pubV22 = new PublisherV2();
+        pubV22.setName("PWD");
+        pubV22.setAddress("ul. Powazkowska 4/40", "Warsaw", "01-555");
+        pubV22.getReleasedBooks().add(ddd);
 
-        pubV21.setName("PWD");
-        pubV21.setAddress("ul. Powazkowska 4/40","Warsaw","01-555");
-        pubV21.getReleasedBooks().add(ddd);
-        publisherV2Repository.save(pubV21);
+        bookRepository.saveAll(() -> List.of(ddd, noEJB).iterator());
+        authorRepository.saveAll(() -> List.of(rod, eric).iterator());
+        publisherV2Repository.saveAll(() -> List.of(pubV21, pubV22).iterator());
 
-        rod.getBooks().add(noEJB);
-        noEJB.getAuthors().add(rod);
-        noEJB.setPublisher(pubV21);
-        pubV21.getReleasedBooks().add(noEJB);
-
-
-        authorRepository.save(rod);
-        bookRepository.save(noEJB);
-        publisherV2Repository.save(pubV21);
-
-        Publisher pub1 = new Publisher();
-        pub1.setName("PWD");
-        pub1.setStreetName("ul. Powazkowska 4/40");
-        pub1.setCity("Warsaw");
-        pub1.setPostalCode("01-555");
-
-        Publisher pub2 = new Publisher();
-        pub2.setName("DWD");
-        pub2.setStreetName("ul. Czestochowska 40/4");
-        pub2.setCity("Czestochowa");
-        pub2.setPostalCode("05-444");
-
-        publisherRepository.saveAll(() -> List.of(pub1, pub2).iterator());
-
-//        PublisherV2 pubV21 = new PublisherV2();
-//        pubV21.setName("PWD");
-//        pubV21.setAddress("ul. Powazkowska 4/40","Warsaw","01-555");
-//        pubV21.getReleasedBooks().add(ddd);
-//
-//        PublisherV2 pubV22 = new PublisherV2();
-//        pubV22.setName("DWD");
-//        pubV22.setAddress("ul. Czestochowska 40/4","Czestochowa","05-444");
-//        pubV22.getReleasedBooks().add(noEJB);
-
-
-
-
-//        publisherV2Repository.saveAll(() -> List.of(pubV21, pubV22).iterator());
-
-
+        addReferences(eric, ddd, pubV22);
+        addReferences(rod, noEJB, pubV21);
 
 
         System.out.println("Started in Bootstrap");
         System.out.println("Number of Books: " + bookRepository.count());
-        System.out.println("Number of publishers: " + publisherRepository.count());
         System.out.println("Number of publishersV2: " + publisherV2Repository.count());
 
-
-
-
-        showRepositories();
+        bookRepository.findAll().forEach(System.out::println);
+        authorRepository.findAll().forEach(System.out::println);
+        publisherV2Repository.findAll().forEach(System.out::println);
     }
 
-    @Transactional
-    public void showRepositories( ) {
+    private void addReferences(Author author, Book book, PublisherV2 publisherV2) {
+        author.getBooks().add(book);
+        book.getAuthors().add(author);
+        book.setPublisher(publisherV2);
+        publisherV2.getReleasedBooks().add(book);
 
-
-
-        var books = bookRepository.findAll();
-
-        books.forEach(book -> book.getAuthors());
-
-        var authors = authorRepository.findAll();
-        authors.forEach(author -> author.getBooks());
-
-        var publishers = publisherV2Repository.findAll();
-        publishers.forEach(publisher -> publisher.getReleasedBooks());
-
-
-        authors.forEach(System.out::println);
-        books.forEach(System.out::println);
-        publishers.forEach(System.out::println);
+        authorRepository.save(author);
+        bookRepository.save(book);
+        publisherV2Repository.save(publisherV2);
     }
 }
