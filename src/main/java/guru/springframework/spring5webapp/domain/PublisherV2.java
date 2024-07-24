@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class PublisherV2 implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Convert(converter = AddressConverter.class)
@@ -48,6 +48,14 @@ public class PublisherV2 implements Serializable {
         }
         return sb.toString();
     }
+
+   public String booksToThymeleafString(){
+        StringBuilder sb = new StringBuilder();
+        for(Book book : releasedBooks){
+            sb.append("id:=").append(book.getId()).append(", title=").append(book.getTitle());
+        }
+        return sb.toString();
+   }
 
     @Override
     public boolean equals(Object o) {

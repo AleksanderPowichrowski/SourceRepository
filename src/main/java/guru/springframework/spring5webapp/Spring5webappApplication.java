@@ -11,5 +11,4 @@ public class Spring5webappApplication {
 		app.setLazyInitialization(false);
 		app.run(args);
 	}
-
 }

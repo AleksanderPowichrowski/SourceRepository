@@ -21,6 +21,14 @@ public class Address{
                 ", postalCode=" + postalCode +
                 '}';
     }
+
+
+    public String toThymeleafString() {
+        return
+                "streetName=" + streetName +
+                ", city=" + city +
+                ", postalCode=" + postalCode;
+    }
     public static Address fromString(String addressString) {
         // Remove the "Address{" prefix and the "}" suffix
         String content = addressString.substring("Address{".length(), addressString.length() - 1);

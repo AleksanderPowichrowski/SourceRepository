@@ -11,14 +11,14 @@ import java.util.Set;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
     private String isbn;
 
     @ManyToOne
-    private Publisher publisher;
+    private PublisherV2 publisher;
 
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
@@ -33,11 +33,11 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public Publisher getPublisher() {
+    public PublisherV2 getPublisher() {
         return publisher;
     }
 
-    public void setPublisher(Publisher publisher) {
+    public void setPublisher(PublisherV2 publisher) {
         this.publisher = publisher;
     }
 
@@ -80,6 +80,12 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
                 '}';
+    }
+
+    public String toThymeleafString() {
+        return  "id=" + id +
+                ", title='" + title + '\'' +
+                ", isbn='" + isbn + '\'';
     }
 
     @Override
